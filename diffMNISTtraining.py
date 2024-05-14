@@ -192,7 +192,7 @@ stepsize = int(T/num_images)
 
 for idx in range(0, T, stepsize):
     t = torch.Tensor([idx]).type(torch.int64)
-    plt.subplot(1, num_images+1, int(idx/stepsize) + 1)
+    if(show): plt.subplot(1, num_images+1, int(idx/stepsize) + 1)
     img, noise = forward_diffusion_sample(image, t)
     if(show): show_tensor_image(img)
 
