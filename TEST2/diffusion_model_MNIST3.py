@@ -414,23 +414,26 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 model
 
 ################
-from torch.optim import Adam
-print(device,len(dataloader))
-model.to(device)
-optimizer = Adam(model.parameters(), lr=0.003)
-epochs = 10000 # Try more!
-from datetime import datetime
-for epoch in range(1,epochs+1):
-    for step, batch in enumerate(dataloader):
-      optimizer.zero_grad()
+def main():
+    from torch.optim import Adam
+    print(device,len(dataloader))
+    model.to(device)
+    optimizer = Adam(model.parameters(), lr=0.003)
+    epochs = 10000 # Try more!
+    from datetime import datetime
+    for epoch in range(1,epochs+1):
+        for step, batch in enumerate(dataloader):
+            optimizer.zero_grad()
+            t = torch.randint(0, T, (BATCH_SIZE,), device=device).long()
+            loss = get_loss(model, batch[0], t)
+            loss.backward()
+            optimizer.step()
 
-      t = torch.randint(0, T, (BATCH_SIZE,), device=device).long()
-      loss = get_loss(model, batch[0], t)
-      loss.backward()
-      optimizer.step()
+            if epoch % 1 == 0 and step == 0:
+                print(f"Epoch {epoch} {datetime.now()} | step {step:03d} Loss: {loss.item()} ",flush=True)
+                if epoch % 100 == 0 and step == 0 and show: sample_plot_image()
+                PATH = f'./mnist{epoch}.pth'
+                if epoch % 100 == 0 and step == 0: torch.save(model.state_dict(), PATH) # モデルデータの保存
 
-      if epoch % 1 == 0 and step == 0:
-        print(f"Epoch {epoch} {datetime.now()} | step {step:03d} Loss: {loss.item()} ",flush=True)
-        if epoch % 100 == 0 and step == 0 and show: sample_plot_image()
-        PATH = f'./mnist{epoch}.pth'
-        if epoch % 100 == 0 and step == 0: torch.save(model.state_dict(), PATH) # モデルデータの保存
+if __name__ == "__main__":
+    main()
