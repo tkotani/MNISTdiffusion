@@ -314,7 +314,7 @@ class SimpleUnet(nn.Module):
 
 model = SimpleUnet()
 print("Num params: ", sum(p.numel() for p in model.parameters()))
-model
+#model
 
 
 # 
@@ -411,7 +411,7 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 #model.load_state_dict(torch.load(PATH)) # it takes the loaded dictionary, not the path file itself
 #loaded_model.to(device)
 ##loaded_model.eval()
-model
+#model
 
 def main():
     from torch.optim import Adam
